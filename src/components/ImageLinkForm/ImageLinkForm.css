@@ -1,0 +1,12 @@
+.form {
+    width:700px;
+    background:
+    radial-gradient(#ff6e7f 3px, transparent 4px),
+    radial-gradient(#ff6e7f 3px, transparent 4px),
+    linear-gradient(#bfe9ff 4px, transparent 0),
+    linear-gradient(45deg, transparent 74px, transparent 75px, #ff6e7f 75px, #ff6e7f 76px, transparent 77px, transparent 109px),
+    linear-gradient(-45deg, transparent 75px, transparent 76px, #ff6e7f 76px, #ff6e7f 77px, transparent 78px, transparent 109px),
+    #bfe9ff;
+    background-size: 109px 109px, 109px 109px,100% 6px, 109px 109px, 109px 109px;
+    background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+}

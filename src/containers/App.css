@@ -7,6 +7,19 @@
   pointer-events: none;
 }
 
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.particles-bg-canvas-self{
+  background: hsla(0, 0%, 0%, 0);
+  position: "fixed";
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
