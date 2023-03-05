@@ -1,6 +1,6 @@
 .Tilt {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     background: #bfe9ff;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #bfe9ff, #ff6e7f);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #bfe9ff, #ff6e7f); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
