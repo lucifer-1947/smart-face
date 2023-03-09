@@ -4,7 +4,6 @@ import './FaceRecognition.css'
 
 const FaceRecognition = ({ imageurl, boundaries }) => {
 
-
     return (
         <div className='center ma'>
             <div className='absolute mt2'>

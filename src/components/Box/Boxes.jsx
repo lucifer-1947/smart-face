@@ -3,7 +3,6 @@ import Box from './Box';
 
 const Boxes = ({ boundaries }) => { 
     
-    console.log(boundaries);
     return (
         <>
             {

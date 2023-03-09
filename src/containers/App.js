@@ -19,8 +19,45 @@ class App extends Component {
       imageurl: "",
       boxes: [],
       route: 'sigin',
-      isSignedIn:false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ""
+      }
     }
+  }
+
+  loadUser = (userData) => {
+    this.setState({ user: userData })
+    console.log(this.state.user)
+
+  }
+
+  updateUser = () => {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "id": this.state.user.id
+    });
+
+    var requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:3000/image", requestOptions)
+      .then(response => response.json())
+      .then(entries =>{
+        this.setState(Object.assign(this.state.user, {entries:entries}))
+      })
+      .catch(error => console.log('error', error));
   }
 
   onInputChange = (event) => {
@@ -31,6 +68,7 @@ class App extends Component {
 
     this.setState({ imageurl: this.state.input })
 
+    console.log(this.state.input)
 
     // Your PAT (Personal Access Token) can be found in the portal under Authentification
     const PAT = '7e7f65687c224928bc6fbfac9006e18d';
@@ -79,14 +117,16 @@ class App extends Component {
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log(result)
 
-        this.setState({ boxes: [] })
+        this.updateUser();
+
+        this.state.boxes = []
+
         result.outputs[0].data.regions.forEach(element => {
           this.displayFaceBox(this.calculateFaceLocation(element))
         });
 
-        this.setState(this.state.boxes)
+        if(this.state.boxes.length!=0) this.setState(this.state.boxes)
 
       })
       .catch(error => console.log('error', error));
@@ -115,8 +155,8 @@ class App extends Component {
 
 
   onRouteChange = (route) => {
-    if(route==='home') this.setState({isSignedIn:true})
-    else this.setState({isSignedIn:false})
+    if (route === 'home') this.setState({ isSignedIn: true })
+    else this.setState({ isSignedIn: false })
 
     this.setState({ route: route })
   }
@@ -125,20 +165,20 @@ class App extends Component {
     return (
       <>
         <div className="App">
-          <Navigation onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn}  />
+          <Navigation onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn} />
 
           {
             (this.state.route === 'home') ?
               <>
                 <Logo />
-                <Rank />
+                <Rank name={this.state.user.name} rank={this.state.user.entries} />
                 <ImageLinkForm onInputChange={this.onInputChange} onDetect={this.onDetect} />
                 <FaceRecognition imageurl={this.state.imageurl} boundaries={this.state.boxes} />
               </> :
               (this.state.route === 'sigin') ?
 
-                <Sigin onRouteChange={this.onRouteChange} /> :
-                <Register onRouteChange={this.onRouteChange} />
+                <Sigin loadUser={this.loadUser} onRouteChange={this.onRouteChange} /> :
+                <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
 
           }
 
