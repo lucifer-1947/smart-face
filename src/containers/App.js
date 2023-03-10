@@ -32,8 +32,6 @@ class App extends Component {
 
   loadUser = (userData) => {
     this.setState({ user: userData })
-    console.log(this.state.user)
-
   }
 
   updateUser = () => {

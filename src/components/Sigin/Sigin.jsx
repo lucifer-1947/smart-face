@@ -39,8 +39,7 @@ class Sigin extends Component {
             .then(response => response.json())
             .then(data =>{
 
-                console.log((typeof data))
-                if((typeof data != typeof "")){
+                if(data.id){
                     this.props.loadUser(data)
                     this.props.onRouteChange('home')
                 }
