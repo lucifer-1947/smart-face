@@ -35,7 +35,7 @@ class Sigin extends Component {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:3000/signin", requestOptions)
+        fetch("https://smart-face-api.onrender.com/signin", requestOptions)
             .then(response => response.json())
             .then(data =>{
 

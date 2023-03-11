@@ -41,7 +41,7 @@ class Register extends Component {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:3000/register", requestOptions)
+        fetch("https://smart-face-api.onrender.com/register", requestOptions)
             .then(response => response.json())
             .then(user => {
                 if(user.id){

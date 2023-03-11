@@ -52,7 +52,7 @@ class App extends Component {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/image", requestOptions)
+    fetch("https://smart-face-api.onrender.com/image", requestOptions)
       .then(response => response.json())
       .then(entries => {
         this.setState(Object.assign(this.state.user, { entries: entries }))
@@ -83,7 +83,7 @@ class App extends Component {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/imageurl", requestOptions)
+    fetch("https://smart-face-api.onrender.com/imageurl", requestOptions)
       .then(response => response.json())
       .then(result => {
         
