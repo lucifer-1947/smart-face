@@ -44,9 +44,11 @@ class Register extends Component {
         fetch("http://localhost:3000/register", requestOptions)
             .then(response => response.json())
             .then(user => {
-                if(user)
-                this.props.loadUser(user);
-                this.props.onRouteChange('home')
+                if(user.id){
+                    this.props.loadUser(user);
+                    this.props.onRouteChange('home')
+                }
+                
             })
             .catch(error => console.log('error', error));
     }

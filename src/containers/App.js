@@ -9,25 +9,27 @@ import FaceRecognition from '../components/FaceRecognition/FaceRecognition';
 import Sigin from '../components/Sigin/Sigin';
 import Register from '../components/Register/Register';
 
+const initialState = {
+  input: "",
+  imageurl: "",
+  boxes: [],
+  route: 'sigin',
+  isSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ""
+  }
+}
 
 class App extends Component {
 
   constructor() {
     super();
-    this.state = {
-      input: "",
-      imageurl: "",
-      boxes: [],
-      route: 'sigin',
-      isSignedIn: false,
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ""
-      }
-    }
+    this.state = initialState;
+
   }
 
   loadUser = (userData) => {
@@ -52,8 +54,8 @@ class App extends Component {
 
     fetch("http://localhost:3000/image", requestOptions)
       .then(response => response.json())
-      .then(entries =>{
-        this.setState(Object.assign(this.state.user, {entries:entries}))
+      .then(entries => {
+        this.setState(Object.assign(this.state.user, { entries: entries }))
       })
       .catch(error => console.log('error', error));
   }
@@ -66,69 +68,40 @@ class App extends Component {
 
     this.setState({ imageurl: this.state.input })
 
-    console.log(this.state.input)
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-    const PAT = '7e7f65687c224928bc6fbfac9006e18d';
-    // Specify the correct user_id/app_id pairings
-    // Since you're making inferences outside your app's scope
-    const USER_ID = '2g3xwbmf4u7b';
-    const APP_ID = 'my-first-application';
-    // Change these to whatever model and image URL you want to use
-    const MODEL_ID = 'face-detection';
-    const MODEL_VERSION_ID = '45fb9a671625463fa646c3523a3087d5';
-    const IMAGE_URL = this.state.input;
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    // YOU DO NOT NEED TO CHANGE ANYTHING BELOW THIS LINE TO RUN THIS EXAMPLE
-    ///////////////////////////////////////////////////////////////////////////////////
-
-    const raw = JSON.stringify({
-      "user_app_id": {
-        "user_id": USER_ID,
-        "app_id": APP_ID
-      },
-      "inputs": [
-        {
-          "data": {
-            "image": {
-              "url": IMAGE_URL
-            }
-          }
-        }
-      ]
+    var raw = JSON.stringify({
+      "id": this.state.user.id,
+      'input': this.state.input
     });
 
-    const requestOptions = {
+    var requestOptions = {
       method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Key ' + PAT
-      },
-      body: raw
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
     };
 
-    // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
-    // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
-    // this will default to the latest version_id
-
-    fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
+    fetch("http://localhost:3000/imageurl", requestOptions)
       .then(response => response.json())
       .then(result => {
+        
+        const boxes = []
+
+        result.outputs[0].data.regions.forEach(element => {
+          boxes.push(this.calculateFaceLocation(element));
+        });
+
+        this.setState({boxes:boxes})
 
         this.updateUser();
 
-        this.state.boxes = []
-
-        result.outputs[0].data.regions.forEach(element => {
-          this.displayFaceBox(this.calculateFaceLocation(element))
-        });
-
-        if(this.state.boxes.length!=0) this.setState(this.state.boxes)
-
       })
-      .catch(error => console.log('error', error));
-
+      .catch(error => {
+        this.setState({boxes:[]})
+        console.log('error', error)
+      })
   }
 
   calculateFaceLocation = (data) => {
@@ -147,14 +120,10 @@ class App extends Component {
     }
   }
 
-  displayFaceBox = (box) => {
-    this.state.boxes.push(box)
-  }
-
 
   onRouteChange = (route) => {
     if (route === 'home') this.setState({ isSignedIn: true })
-    else this.setState({ isSignedIn: false })
+    else this.setState(initialState)
 
     this.setState({ route: route })
   }
